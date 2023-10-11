@@ -21,8 +21,9 @@
  
 </template>
  <script setup>
- const props =defineProps(['headers','data','titulo'])
- const rutaEdit = `${props.titulo}/edit`
-  
+ const props =defineProps(['headers','data','modelo'])
+  const titulo = props.modelo.charAt(0).toUpperCase() + props.modelo.slice(1);
+ const rutaEdit = `${props.modelo}/edit`
+
  </script>
  

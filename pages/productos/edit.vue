@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters>
+ <v-row no-gutters>
     <v-col cols="6" offset="3">
       <v-sheet class="pa-2 ma-2">
         <v-card title="Productos">
@@ -31,7 +31,7 @@
       <v-dialog v-model="dialog" persistent   width="1024">
         <v-card>
           <v-card-text> 
-           <categorias />
+           <edit modelo="categorias" />
              </v-card-text>
           <v-card-actions>
             <v-btn color="primary" block @click="dialog = false">
@@ -41,26 +41,26 @@
         </v-card>
       </v-dialog>
      
-  </div>
+  </div> 
 </template>
 
-<script setup>
+ <script setup>
 
-import categorias from "~/components/catalogos/categorias.vue";
+ import edit from "~/components/catalogos/edit.vue";
 
 
-const dialog = ref(false);
+  const dialog = ref(false);
 
-const dato = await useFetch("/api/categorias");
-let listacategorias = dato.data.value.map((item) => item.nombre);
+  const dato = await useFetch("/api/categorias");
+  let listacategorias = dato.data.value.map((item) => item.nombre);
 
-listacategorias.push("Nueva Categoria..");
+  listacategorias.push("Nueva Categoria..");
 
-const dato2 = await useFetch("/api/marcas");
-let marcas = dato2.data.value.map((item) => item.nombre);
+  const dato2 = await useFetch("/api/marcas");
+  let marcas = dato2.data.value.map((item) => item.nombre);
 
-const cambiaCategoria = (valor) => {
-  if (valor == "Nueva Categoria..")
-    dialog.value= true
-};
-</script>
+  const cambiaCategoria = (valor) => {
+    if (valor == "Nueva Categoria..")
+      dialog.value= true
+  };
+ </script>

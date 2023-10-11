@@ -1,5 +1,5 @@
 <template>
-  <tabla :data="data" :headers="headers" titulo="Productos" />
+  <tabla :data="data" :headers="headers" modelo="productos" />
 </template>
 
 <script setup>
