@@ -11,6 +11,7 @@
         ></v-list-item>
       </template>
       <v-list-item value="productos" title="Productos" to="/productos" />
+      <v-list-item value="stock" title="stock" to="/stock" />
 
       <v-list-group value="catalogos">
         <template v-slot:activator="{ props }">
@@ -18,6 +19,8 @@
         </template>
         <v-list-item value="categorias" title="Caegorias" to="/categorias" />
         <v-list-item value="marcas" title="Marcas" to="/marcas" />
+        <v-list-item value="locaciones" title="Locaciones" to="/locaciones" />
+
       </v-list-group>
     </v-list-group>
   </v-list>

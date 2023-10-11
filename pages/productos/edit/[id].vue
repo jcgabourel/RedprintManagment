@@ -4,16 +4,18 @@
       <v-sheet class="pa-2 ma-2">
         <v-card title="Productos">
           <v-card-text>
-            <v-text-field label="Nombre" variant="outlined"></v-text-field>
+            <v-text-field label="Nombre" variant="outlined"  v-model="nombre"> </v-text-field>
             <v-select
               label="Categoria"
               :items="listacategorias"
+             v-model="categoria" 
               variant="outlined"
               @update:modelValue="cambiaCategoria"
             ></v-select>
             <v-select
-              label="Marcas"
+              label="Marca"
               :items="marcas"
+              v-model="marca"
               variant="outlined"
             ></v-select>
             <v-btn type="submit" block class="mt-2" color="primary"
@@ -42,18 +44,21 @@
       </v-dialog>
      
   </div> 
+ 
+
 </template>
 
  <script setup>
-
- import edit from "~/components/catalogos/edit.vue";
-
-
+  import edit from "~/components/catalogos/edit.vue";
   const dialog = ref(false);
 
+
+  const categoria = ref()
+  const marca = ref()
+  const nombre =ref()
+  
   const dato = await useFetch("/api/categorias");
   let listacategorias = dato.data.value.map((item) => item.nombre);
-
   listacategorias.push("Nueva Categoria..");
 
   const dato2 = await useFetch("/api/marcas");
@@ -63,4 +68,16 @@
     if (valor == "Nueva Categoria..")
       dialog.value= true
   };
+
+  const route = useRoute();
+  const ruta =`/api/productos/${route.params.id}`
+ 
+  const { data } = await useFetch(ruta);
+  categoria.value =  data.value['categoria']
+  marca.value =  data.value['marca']
+  nombre.value = data.value['nombre']
+
+ 
+
+
  </script>
