@@ -11,27 +11,23 @@
                 variant="outlined"
                 v-for="(header, index) in vheaders"
                 :key="header.id"
-                v-model="forma[index+1]"
+                v-model="forma[index]"
               />
-
               <v-btn type="submit" block class="mt-2" color="primary"
                 >Submit</v-btn
               >
-
-
-              <input type="text" name="uuid"   v-model="forma[0]" />
             </v-form>
           </v-card-text>
         </v-card>
       </v-sheet>
     </v-col>
   </v-row>
+
  
 </template>
 
-<script setup> 
-
-const props = defineProps(["modelo", "headers", "data","uuid"]);
+<script setup>
+const props = defineProps(["modelo", "headers", "data"]);
 const titulo = props.modelo.charAt(0).toUpperCase() + props.modelo.slice(1);
 const vheaders = computed(() => {
   return props.headers.filter((header) => header !== "id");
@@ -41,38 +37,31 @@ const forma = reactive([]);
 const campoforma = computed(() => {
   var resultado = {};
 
-  if (forma.length === props.headers.length) {
+  if (forma.length === props.headers.length - 1) {
     for (var i = 0; i < forma.length; i++) {
-      resultado[props.headers[i]] = forma[i];
+      resultado[props.headers[i + 1]] = forma[i];
     }
   }
   return resultado;
 });
 
-const submitForm = () => {
+const submitForm = async () => {
+  const router = useRouter();
   try {
-
-    forma[0] = props.uuid
-
-    console.log(forma)
-    useFetch("http://localhost:3001/api/categorias/store", {
+    await useFetch("http://127.0.0.1:8000/api/categorias", {
       method: "POST",
       body: campoforma.value,
     });
 
-    const router = useRouter();
     router.push({ path: "/categorias" });
-
-
-    console.log("Respuesta del servidor:", props.data);
   } catch (error) {
     console.error("Error al enviar datos:", error);
   }
 };
 
-
- 
-
-
+onMounted(() => {
+  for (let dato in props.data) {
+    if (dato != "id") forma.push(props.data[dato]);
+  }
+});
 </script>
- 

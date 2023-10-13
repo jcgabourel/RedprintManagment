@@ -14,11 +14,21 @@
         
             <td v-for="(cell,cellIndex ) in item"  :key="cellIndex">{{ cell }}</td>  
            <td>
-            <v-btn
-              density="compact"
-              icon="mdi-pencil"
-              :to="rutaEdit + item.id"
-            ></v-btn>
+            <v-row>
+              <v-col cols="auto">
+              <v-btn   density="compact"            
+                icon="mdi-pencil"
+                :to="rutaEdit + item.id" /> 
+            </v-col>
+            <v-col cols="auto">
+              <v-btn   density="compact"             
+                icon="mdi-delete"
+                @click="borrar(item.id)" />
+           </v-col>
+
+            </v-row>
+           
+           
           </td>    
         </tr> 
       </tbody>
@@ -29,8 +39,10 @@
     </v-card-actions>
   </v-card>
  
+ {{ dato }}
 </template>
  <script setup>
+ const dato =  props.data.value
 const props = defineProps(["headers", "data", "modelo"]);
 const titulo = props.modelo.charAt(0).toUpperCase() + props.modelo.slice(1);
 const rutaEdit = `/${props.modelo}/edit/`;
@@ -41,8 +53,23 @@ const haydatos = computed(() => {
 });
 
 
+const borrar = async (id) => {
+   
+  try {
+     await useFetch(`http://127.0.0.1:8000/api/categorias/${id}` , {
+       method: "DELETE" 
+       
+     });
 
-const dato =  props.data.value
+     dato.value = dato.value.filter((nodo) => nodo.id !== id);
+     console.log("intenta borrar",id)
+
+  } catch (error) {
+    console.error("Error al enviar datos:", error);
+  }
+};
+
+
  
 
 </script>
