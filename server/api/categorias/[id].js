@@ -1,26 +1,11 @@
 export default defineEventHandler((event) => {
-  const data = [
-    {
-      id: "1",
-      nombre: "Discos Duros",
-    },
-    {
-      id: "2",
-      nombre: "Memorias",
-    },
-    {
-      id: "3",
-      nombre: "Tarjetas",
-    },
-    {
-      id: "4",
-      nombre: "Prcesadores",
-    },
-    {
-      id: "5",
-      nombre: "Gabinetes",
-    },
-  ];
+  
 
-  return data[event.context.params.id - 1];
+  const ala =   useStorage('test').getItem('categorias')
+    return  ala.then((f)=> {
+        if(f===null)
+        return  {}
+        return f[event.context.params.id - 1]
+    }   
+    ) 
 });

@@ -1,10 +1,16 @@
 <template>
-  <tabla :data="data" :headers="headers" :modelo="modelo" />
+    <tabla :data="dato.data" :headers="headers" :modelo="modelo" />  
+  
+
+   
 </template>
 
 <script setup>
-const props = defineProps(["modelo"]);
+  const props = defineProps(["modelo"]);
 
-const { data } = await useFetch(`/api/${props.modelo}/`);
-const headers = Object.keys(data.value[0]);
+  const dato =   await useFetch(`/api/${props.modelo}/`);
+
+  const dato2 = await useFetch(`/api/${props.modelo}/contract`); 
+
+  const headers = Object.keys(dato2.data.value);
 </script>

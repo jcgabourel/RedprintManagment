@@ -4,6 +4,7 @@
       <template v-slot:prepend>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       </template>
+      <v-btn @click="toggleTheme">toggle theme</v-btn>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" location="left">
@@ -25,13 +26,14 @@
   </v-layout>
 </template>
 
-<script>
+<script setup>
 import sideMenu from "~/components/sideMenu.vue";
+import { useTheme } from "vuetify";
 
-export default {
-  components: { sideMenu },
-  data: () => ({
-    drawer: true,
-  }),
-};
+const drawer = ref(true);
+const theme = useTheme();
+
+function toggleTheme() {
+  theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
+}
 </script>

@@ -9,4 +9,6 @@ export default {
   components: { listado },
   
 };
+
+
 </script>

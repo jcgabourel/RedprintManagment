@@ -1,4 +1,11 @@
+
+   //await 
+    
+
 export default defineEventHandler((event) => {
+
+    useStorage('test').setItem('foo', { hello: 'world' })
+
     return  [
         {
             id: "1",
