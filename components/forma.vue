@@ -46,7 +46,7 @@ const campoforma = computed(() => {
 const submitForm = async () => {
   const router = useRouter();
   try {
-    let ruta = "http://127.0.0.1:8000/api/categorias";
+    let ruta = `http://127.0.0.1:8000/api/${props.modelo}`;
     let metodo = "POST";
 
     if (props.data) {
@@ -59,7 +59,7 @@ const submitForm = async () => {
       body: campoforma.value,
     });
 
-     router.push({ path: "/categorias" });
+     router.push({ path: `/${props.modelo}` });
   } catch (error) {
     console.error("Error al enviar datos:", error);
   }
