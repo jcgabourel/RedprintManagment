@@ -20,5 +20,6 @@ export default defineNuxtConfig({
       autoImport: true ,
       useVuetifyLabs: true , 
     }
-  }
+  },
+  components: ['~/components/catalogos' ,'~/components']
 })

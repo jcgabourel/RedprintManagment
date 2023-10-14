@@ -1,9 +1,7 @@
 <template>
-
-    <edit modelo="categorias" :id="route.params.id" />  
+  <editar modelo="categorias" :id="route.params.id" />
 </template>
 
 <script setup >
-import edit from "~/components/catalogos/edit.vue";
-const route = useRoute(); 
+const route = useRoute();
 </script>
