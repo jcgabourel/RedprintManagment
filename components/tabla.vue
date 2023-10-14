@@ -38,11 +38,9 @@
       <v-btn :to="props.modelo + '/nuevo'">Nuevo</v-btn>
     </v-card-actions>
   </v-card>
- 
- {{ dato }}
 </template>
  <script setup>
- const dato =  props.data.value
+ const  dato =  ref(props.data.value)
 const props = defineProps(["headers", "data", "modelo"]);
 const titulo = props.modelo.charAt(0).toUpperCase() + props.modelo.slice(1);
 const rutaEdit = `/${props.modelo}/edit/`;
@@ -56,12 +54,12 @@ const haydatos = computed(() => {
 const borrar = async (id) => {
    
   try {
-     await useFetch(`http://127.0.0.1:8000/api/categorias/${id}` , {
-       method: "DELETE" 
+      await useFetch(`http://127.0.0.1:8000/api/categorias/${id}` , {
+        method: "DELETE" 
        
-     });
+      });
 
-     dato.value = dato.value.filter((nodo) => nodo.id !== id);
+     dato.value =  dato.value.filter((nodo) => nodo.id !== id);
      console.log("intenta borrar",id)
 
   } catch (error) {

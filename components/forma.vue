@@ -22,8 +22,6 @@
       </v-sheet>
     </v-col>
   </v-row>
-
- 
 </template>
 
 <script setup>
@@ -48,12 +46,20 @@ const campoforma = computed(() => {
 const submitForm = async () => {
   const router = useRouter();
   try {
-    await useFetch("http://127.0.0.1:8000/api/categorias", {
-      method: "POST",
+    let ruta = "http://127.0.0.1:8000/api/categorias";
+    let metodo = "POST";
+
+    if (props.data) {
+      ruta += `/${props.data.id}`;
+      metodo = "PUT";
+    }
+
+    await useFetch(ruta, {
+      method:metodo,
       body: campoforma.value,
     });
 
-    router.push({ path: "/categorias" });
+     router.push({ path: "/categorias" });
   } catch (error) {
     console.error("Error al enviar datos:", error);
   }

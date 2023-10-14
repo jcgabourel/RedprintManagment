@@ -1,4 +1,5 @@
 <template>
+   
     <tabla :data="dato.data" :headers="headers" :modelo="modelo" />     
 </template>
 
