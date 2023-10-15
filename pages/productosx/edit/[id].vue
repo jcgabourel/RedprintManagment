@@ -58,7 +58,7 @@
   const nombre =ref()
   
   const dato = await useFetch("/api/categorias");
-  let listacategorias = dato.data.value.map((item) => item.nombre);
+  let listacategorias = dato.data.value.map((item) => item.nombre);  
   listacategorias.push("Nueva Categoria..");
 
   const dato2 = await useFetch("/api/marcas");

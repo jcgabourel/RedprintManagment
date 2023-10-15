@@ -15,11 +15,12 @@
                 />
                 <v-select
                   v-if="contract.value[header] != 'string'"
-                  :items="otherdata[header].map((item) => item)"
+                  :items="relaciones[header].map((item) => item)"
                   item-title="nombre"
                   item-value="id"
                   :label="header"
                   v-model="forma[index]"
+                @update:modelValue="cambiaCategoria(forma[index],index)"
                   variant="outlined"
                 />
               </div>
@@ -33,14 +34,38 @@
       </v-sheet>
     </v-col>
   </v-row>
+
+
+  
+  <div class="text-center">
+     
+
+      <v-dialog v-model="dialog" persistent   width="1024">
+        <v-card>
+          <v-card-text> 
+                <crear modelo="categorias"  />
+             </v-card-text>
+          <v-card-actions>
+            <v-btn color="primary" block @click="dialog = false">
+              Close Dialog
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+     
+  </div> 
+  
 </template>
 
 <script setup>
-const props = defineProps(["contract", "data", "modelo", "otherdata"]);
+const props = defineProps(["contract", "data", "modelo", "relaciones"]);
 const headers = Object.keys(props.contract.value);
 
 const titulo = props.modelo.charAt(0).toUpperCase() + props.modelo.slice(1);
 const forma = reactive([]);
+const dialog = ref(false);
+
+//relaciones.push({id:0,nombre:"Nueva Categoria.."});
 
 const vheaders = computed(() => {
   return headers.filter((header) => header !== "id");
@@ -85,9 +110,18 @@ const submitForm = async () => {
   }
 };
 
-onMounted(() => {
-  for (let dato in props.data) {
-    if (dato != "id") forma.push(props.data[dato]);
-  }
-});
+  const cambiaCategoria = (valor, index  ) => {
+      
+    if (valor == 0){
+      forma[index]= null
+       dialog.value= true
+    }
+      
+  };
+
+// onMounted(() => {
+//   for (let dato in props.data) {
+//     if (dato != "id") forma.push(props.data[dato]);
+//   }
+// });
 </script>
