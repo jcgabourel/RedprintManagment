@@ -13,7 +13,7 @@
                   variant="outlined"
                   v-model="forma[index]"
                 />
-                <v-select
+                <v-autocomplete
                   v-if="contract.value[header] != 'string'"
                   :items="relaciones[header].map((item) => item)"
                   item-title="nombre"
@@ -51,8 +51,7 @@
       </v-card>
     </v-dialog>
   </div>
- data = {{ data }} <hr/>
- forma = {{ forma }} <hr/>
+ 
 
 </template>
 
@@ -112,12 +111,14 @@ const submitForm = async () => {
       metodo = "PUT";
     }
 
-    await useFetch(ruta, {
+    const nuevo = await useFetch(ruta, {
       method: metodo,
       body: campoforma.value,
     });
+
+    
    
-     emit('formaSubmited',7  )
+     emit('formaSubmited',nuevo.data.value.id  )
 
     if (props.dontGoToList == undefined || props.dontGoToList == false) {
       router.push({ path: `/${props.modelo}` });
