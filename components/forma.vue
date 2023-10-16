@@ -20,7 +20,9 @@
                   item-value="id"
                   :label="header"
                   v-model="forma[index]"
-                @update:modelValue="cambiaCategoria(forma[index],index)"
+                  @update:modelValue="
+                    cambiaCategoria(forma[index], index, header)
+                  "
                   variant="outlined"
                 />
               </div>
@@ -35,37 +37,48 @@
     </v-col>
   </v-row>
 
-
-  
   <div class="text-center">
-     
+    <v-dialog v-model="dialog" persistent width="1024">
+      <v-card>
+        <v-card-text>
+          <crear :modelo="modeloAlterno" :dontGoToList="true" @crearSubmited="crearSubmitedHandler"  />
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" block @click="dialog = false">
+            Close Dialog
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+ data = {{ data }} <hr/>
+ forma = {{ forma }} <hr/>
 
-      <v-dialog v-model="dialog" persistent   width="1024">
-        <v-card>
-          <v-card-text> 
-                <crear modelo="categorias"  />
-             </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" block @click="dialog = false">
-              Close Dialog
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-     
-  </div> 
-  
 </template>
 
 <script setup>
-const props = defineProps(["contract", "data", "modelo", "relaciones"]);
+const props = defineProps([
+  "contract",
+  "data",
+  "modelo",
+  "relaciones",
+  "dontGoToList",
+]);
 const headers = Object.keys(props.contract.value);
-
 const titulo = props.modelo.charAt(0).toUpperCase() + props.modelo.slice(1);
 const forma = reactive([]);
 const dialog = ref(false);
+const modeloAlterno = ref();
+const indiceAlterno=ref();
+const emit = defineEmits(['formaSubmited','finsubcaptura'])
 
-//relaciones.push({id:0,nombre:"Nueva Categoria.."});
+function crearSubmitedHandler(cual,dequien){
+dialog.value = false
+emit('finsubcaptura')
+forma[indiceAlterno.value]=cual
+console.log("segun yo se seleccion ",cual," de",modeloAlterno.value)
+
+}
 
 const vheaders = computed(() => {
   return headers.filter((header) => header !== "id");
@@ -103,25 +116,33 @@ const submitForm = async () => {
       method: metodo,
       body: campoforma.value,
     });
+   
+     emit('formaSubmited',7  )
 
-    router.push({ path: `/${props.modelo}` });
+    if (props.dontGoToList == undefined || props.dontGoToList == false) {
+      router.push({ path: `/${props.modelo}` });
+    }
   } catch (error) {
     console.error("Error al enviar datos:", error);
   }
 };
 
-  const cambiaCategoria = (valor, index  ) => {
-      
-    if (valor == 0){
-      forma[index]= null
-       dialog.value= true
-    }
-      
-  };
+const cambiaCategoria = (valor, index, cual) => {
+  if (valor == 0) {
+    forma[index] = null;
+    modeloAlterno.value = `${cual}s`;
+indiceAlterno.value =index ;
+    dialog.value = true;
+  }
+};
 
-// onMounted(() => {
-//   for (let dato in props.data) {
-//     if (dato != "id") forma.push(props.data[dato]);
-//   }
-// });
+onMounted(()=>{
+  for(const key in props.data)
+  {
+    if (key !="id")
+    forma.push (props.data[key])
+  }
+
+
+})
 </script>

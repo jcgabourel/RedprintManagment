@@ -38,7 +38,7 @@
     </v-table>
 
     <v-card-actions>
-      <v-btn :to="props.modelo + '/nuevo'">Nuevo</v-btn>
+      <v-btn :to="'/'+props.modelo + '/nuevo'">Nuevo</v-btn>
     </v-card-actions>
   </v-card>
  
@@ -63,12 +63,13 @@ const borrar = async (id) => {
   try {
 
     
-    await useFetch(`http://127.0.0.1:8000/api/categorias/${id}`, {
+    await useFetch(`http://127.0.0.1:8000/api/${props.modelo}/${id}`, {
       method: "DELETE",
     });
 
     dato.value = dato.value.filter((nodo) => nodo.id !== id);
     console.log("intenta borrar", id);
+
   } catch (error) {
     console.error("Error al enviar datos:", error);
   }
