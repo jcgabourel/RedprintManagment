@@ -1,5 +1,11 @@
 <template>
-  <v-card title="Stock">
+  <v-card>
+    <v-toolbar>
+      <v-toolbar-title  > Stock </v-toolbar-title>
+       
+    </v-toolbar>
+     
+
     <v-table>
       <thead>
         <tr>
@@ -15,7 +21,11 @@
             <span>{{ item.nombre }} </span>
           </td>
           <td>
-            <span> <v-chip v-for="chip in item.existencias" class="ma-2">  {{chip.locacion.nombre}} </v-chip> </span>
+            <span>
+              <v-chip v-for="chip in item.existencias" class="ma-2">
+                {{ chip.locacion.nombre }}
+              </v-chip>
+            </span>
           </td>
           <td>
             <span>{{ item.existencias_suma }} </span>
