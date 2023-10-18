@@ -3,7 +3,7 @@
     <v-toolbar>
       <v-toolbar-title> Movimientos </v-toolbar-title>
       <template v-slot:append>
-        <v-btn color="secondary" class="mb-2" v-bind="props"> ENTRADA </v-btn>
+        <v-btn color="secondary" class="mb-2" v-bind="props" to="/movimientos/entrada"> ENTRADA </v-btn>
         <v-btn color="warning" class="mb-2" v-bind="props"> SALIDA </v-btn>
       </template>
     </v-toolbar>
