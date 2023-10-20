@@ -121,7 +121,7 @@
                 >Agregar Producto</v-btn
               >
 
-              <v-btn type="submit" block class="mt-2" color="primary"
+              <v-btn type="submit " block class="mt-2" color="primary"
                 >Submit</v-btn
               >
             </v-form>
@@ -131,7 +131,7 @@
     </v-col>
   </v-row>
 
-  {{forma  }}<hr />
+   
   {{movimientos}}
 </template>
 <script setup>
@@ -168,6 +168,44 @@ const submitForm = async () => {
   }
 };
 
+
+
+const movimientosCompletos = computed(()=>{
+
+ return  movimientos.map((movimiento)=>{
+    movimiento.stock_move_type_id=forma['stock_move_type_id']
+    movimiento.locacion_id=forma['locacion_id']
+    return movimiento
+
+  })
+})
+
+const submitForm2 = async () => {
+  const router = useRouter();
+
+ 
+  if (movimientos.length ==0) return;
+  try {
+ 
+ 
+
+ 
+
+    let ruta = `http://127.0.0.1:8000/api/movimientos/batch`;
+    let metodo = "POST";
+
+    const nuevo = await useFetch(ruta, {
+      method: metodo,
+      body: movimientosCompletos.value,
+    });
+
+ 
+
+    router.push({ path: `/movimientos` });
+  } catch (error) {
+    console.error("Error al enviar datos:", error);
+  }
+};
 
 const borrar =   (indice) => {
 

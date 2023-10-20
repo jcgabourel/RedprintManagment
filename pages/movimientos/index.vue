@@ -16,6 +16,8 @@
           <th class="text-left">Cantidad</th>
           <th class="text-left">Tipo</th>
           <th class="text-left">Estatus</th>
+          <th class="text-left">Accion</th>
+
         </tr>
       </thead>
 
@@ -34,13 +36,40 @@
            
           </td>
           <td><v-chip :color="item.estatus === 'Procesado' ? 'primary':'red' ">{{ item.estatus }}</v-chip>  </td>
-        </tr>
+       <td>
+        <v-col cols="auto">
+                <v-btn
+                  density="compact"
+                  icon="mdi-delete"
+                  @click="borrar(item.id)"
+                />
+              </v-col>
+       </td>
+       </tr>
       </tbody>
     </v-table>
   </v-card>
-
+<pre>{{movimientos.data.value[0]}}</pre>
  
 </template>
 <script setup>
 const movimientos = await useFetch(`http://127.0.0.1:8000/api/movimientos`);
+
+const borrar = async (id) => {
+  try {
+
+    
+    await useFetch(`http://127.0.0.1:8000/api/movimientos/${id}`, {
+      method: "DELETE",
+    });
+
+    movimientos.data.value = movimientos.data.value.filter((nodo) => nodo.id !== id);
+    console.log("intenta borrar", id);
+
+  } catch (error) {
+    console.error("Error al enviar datos:", error);
+  }
+};
+
+
 </script>
