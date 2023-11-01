@@ -71,12 +71,11 @@ const modeloAlterno = ref();
 const indiceAlterno=ref();
 const emit = defineEmits(['formaSubmited','finsubcaptura'])
 
-function crearSubmitedHandler(cual,dequien){
-dialog.value = false
-emit('finsubcaptura')
-forma[indiceAlterno.value]=cual
-console.log("segun yo se seleccion ",cual," de",modeloAlterno.value)
-
+//function crearSubmitedHandler(cual,dequien){
+function crearSubmitedHandler(cual){
+  dialog.value = false
+  emit('finsubcaptura')
+  forma[indiceAlterno.value]=cual 
 }
 
 const vheaders = computed(() => {

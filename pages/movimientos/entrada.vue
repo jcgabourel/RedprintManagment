@@ -29,22 +29,35 @@
               />
 
               <v-autocomplete
-                :items="productos.data.value"
+                :items="claves['productos'] "
                 item-title="nombre"
                 item-value="id"
                 label="Producto"
                 v-model="forma['producto_id']"
                 variant="outlined"
+                @update:modelValue=" cambiaCategoria(
+                    forma['producto_id'],
+                    'producto_id',
+                    'productos'
+                  ) "
               />
 
               <v-select
-                :items="locaciones.data.value"
+                :items="claves['locacion']"
                 item-title="nombre"
                 item-value="id"
                 label="Locacion"
                 v-model="forma['locacion_id']"
                 variant="outlined"
+                @update:modelValue=" cambiaCategoria(
+                    forma['locacion_id'],
+                    'locacion_id',
+                    'locaciones'
+                  ) "
               />
+
+
+
               <v-text-field
                 label="Cantidad"
                 clearable
@@ -131,18 +144,73 @@
     </v-col>
   </v-row>
 
-   
-  {{movimientos}}
+  <div class="text-center">
+    <v-dialog v-model="dialog" persistent width="1024">
+      <v-card>
+        <v-card-text>
+          <crear
+            :modelo="modeloAlterno"
+            :dontGoToList="true"
+            @crearSubmited="crearSubmitedHandler"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" block @click="dialog = false">
+            Close Dialog
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 <script setup>
 const productos = await useFetch(`http://127.0.0.1:8000/api/productos/`);
 const locaciones = await useFetch(`http://127.0.0.1:8000/api/locaciones/`);
 const tipos = await useFetch(`http://127.0.0.1:8000/api/tiposmovimiento/`);
+
 const capturaMasiva = ref(false);
-
 const forma = reactive({ stock_move_type_id: 1 });
-
 const movimientos = reactive([]);
+const modeloAlterno = ref();
+const dialog = ref(false);
+const indiceAlterno = ref();
+
+
+const claves = reactive({});
+
+// const clavesProductos = reactive({});
+// const clavesLocaciones = reactive({});
+
+const movimientosCompletos = computed(() => {
+  return movimientos.map((movimiento) => {
+    movimiento.stock_move_type_id = forma["stock_move_type_id"];
+    movimiento.locacion_id = forma["locacion_id"];
+    return movimiento;
+  });
+});
+
+
+
+claves['productos']= [
+  ...productos.data.value,
+  { id: 0, nombre: "Nuevo Producto.." },
+];
+claves['locacion']= [
+  ...locaciones.data.value,
+  { id: 0, nombre: "Nueva Locacion.." },
+];
+
+// clavesProductos.value = [
+//   ...productos.data.value,
+//   { id: 0, nombre: "Nuevo Producto.." },
+// ];
+// clavesLocaciones.value = [
+//   ...locaciones.data.value,
+//   { id: 0, nombre: "Nueva Locación.." },
+// ];
+
+
+
 
 const agregaProducto = () => {
   movimientos.push({ producto_id: null, cantidad: null });
@@ -168,29 +236,11 @@ const submitForm = async () => {
   }
 };
 
-
-
-const movimientosCompletos = computed(()=>{
-
- return  movimientos.map((movimiento)=>{
-    movimiento.stock_move_type_id=forma['stock_move_type_id']
-    movimiento.locacion_id=forma['locacion_id']
-    return movimiento
-
-  })
-})
-
 const submitForm2 = async () => {
   const router = useRouter();
 
- 
-  if (movimientos.length ==0) return;
+  if (movimientos.length == 0) return;
   try {
- 
- 
-
- 
-
     let ruta = `http://127.0.0.1:8000/api/movimientos/batch`;
     let metodo = "POST";
 
@@ -199,21 +249,45 @@ const submitForm2 = async () => {
       body: movimientosCompletos.value,
     });
 
- 
-
     router.push({ path: `/movimientos` });
   } catch (error) {
     console.error("Error al enviar datos:", error);
   }
 };
 
-const borrar =   (indice) => {
-
-console.log( movimientos.length);
-    if (indice >= 0 && indice < movimientos.length) {
-      movimientos.splice(indice, 1);
-    }  
+const borrar = (indice) => {
+  if (indice >= 0 && indice < movimientos.length) {
+    movimientos.splice(indice, 1);
+  }
 };
 
+const cambiaCategoria = (valor, index, cual) => {
+  if (valor == 0) {
+    forma[index] = null;
 
+    modeloAlterno.value = cual;
+    indiceAlterno.value = index;
+    dialog.value = true;
+  }
+};
+
+async function crearSubmitedHandler(cual) {
+  dialog.value = false;
+  
+  const clavex = await useFetch(`http://127.0.0.1:8000/api/${modeloAlterno.value}/`);
+  claves[indiceAlterno.value.slice(0, -3)] = [
+    ...clavex.data.value,
+    { id: 0, nombre: `Nuevo ${indiceAlterno.value.slice(0, -3)}..` },
+  ];
+  
+  // const locacionesx = await useFetch(`http://127.0.0.1:8000/api/locaciones/`);
+  // clavesLocaciones.value = [
+  //   ...locacionesx.data.value,
+  //   { id: 0, nombre: "Nueva Locación.." },
+  // ];
+
+  forma[indiceAlterno.value] = cual;
+
+  
+}
 </script>

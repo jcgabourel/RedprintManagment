@@ -11,9 +11,11 @@
       </thead>
       <tbody v-if="haydatos">
         <tr v-for="item in dato" :key="item.id">
-          <td v-for="(cell, cellIndex) in item" :key="cellIndex"> 
-            <span v-if=" [ 'string','number'].includes(typeof cell)" >{{ cell }}</span> 
-            <span v-else>{{  cell[contract.value[cellIndex]]}}         </span>
+          <td v-for="(cell, cellIndex) in item" :key="cellIndex">
+            <span v-if="['string', 'number'].includes(typeof cell)">{{
+              cell
+            }}</span>
+            <span v-else>{{ cell[contract.value[cellIndex]] }} </span>
           </td>
           <td>
             <v-row>
@@ -38,21 +40,25 @@
     </v-table>
 
     <v-card-actions>
-      <v-btn :to="'/'+props.modelo + '/nuevo'">Nuevo</v-btn>
+      <v-btn :to="'/' + props.modelo + '/nuevo'">Nuevo</v-btn>
     </v-card-actions>
   </v-card>
- 
+
+  <v-alert closable :text="errorMessage"  v-model="alert" type="error"></v-alert>
 </template>
 
 <script setup>
 const props = defineProps(["contract", "data", "modelo"]);
-const headers =  Object.keys( props.contract.value);
+const headers = Object.keys(props.contract.value);
 
 const dato = ref(props.data.value);
 
-
 const titulo = props.modelo.charAt(0).toUpperCase() + props.modelo.slice(1);
 const rutaEdit = `/${props.modelo}/edit/`;
+
+const errorMessage = ref("");
+const alert = ref(false)
+
 
 const haydatos = computed(() => {
   if (JSON.stringify(props.data.value) === "{}") return false;
@@ -60,19 +66,33 @@ const haydatos = computed(() => {
 });
 
 const borrar = async (id) => {
-  try {
 
-    
-    await useFetch(`http://127.0.0.1:8000/api/${props.modelo}/${id}`, {
-      method: "DELETE",
-    });
+  let errorEnFetch =false ;
+  try {
+      await useFetch(
+      `http://127.0.0.1:8000/api/${props.modelo}/${id}`,
+      {
+        method: "DELETE",
+        onResponseError({ request, response, options }) {
+          if("500"==response.status)
+            {
+              errorEnFetch = true;
+              errorMessage.value ="Error al Eliminar el registro"
+              alert.value = true
+            }
+        },
+      }
+    );
+
+    if(errorEnFetch)
+    return
+
+     
 
     dato.value = dato.value.filter((nodo) => nodo.id !== id);
     console.log("intenta borrar", id);
-
   } catch (error) {
     console.error("Error al enviar datos:", error);
   }
 };
 </script>
- 
