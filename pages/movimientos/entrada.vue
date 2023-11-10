@@ -191,7 +191,7 @@ const movimientosCompletos = computed(() => {
 
 
 
-claves['productos']= [
+claves['producto']= [
   ...productos.data.value,
   { id: 0, nombre: "Nuevo Producto.." },
 ];

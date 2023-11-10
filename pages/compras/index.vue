@@ -22,16 +22,11 @@
 
       <tbody>
         <tr v-for="(item, index) in compras.data.value">
-          <td>{{ item.producto.nombre }}</td>
-          <td>{{ item.locacion.nombre }}</td>
-          <td>{{ item.cantidad }}</td>
+          <td>{{ item.fecha }}</td>
+          <td>{{ item.proveedor.nombre }}</td>
+          <td>33</td>
           <td>
-            <v-chip class="ma-2"  v-if="item.tipo.tipo_base=='Entrada'" color="green" text-color="white">
-               {{ item.tipo.nombre }}
-            </v-chip>
-            <v-chip class="ma-2" v-else color="red" text-color="white">
-               {{ item.tipo.nombre }}
-            </v-chip>
+           ddd
            
           </td>
           <td><v-chip :color="item.estatus === 'Procesado' ? 'primary':'red' ">{{ item.estatus }}</v-chip>  </td>
@@ -49,6 +44,7 @@
     </v-table>
   </v-card>
  
+  {{compras}}
  
 </template>
 <script setup>
