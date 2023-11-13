@@ -24,12 +24,9 @@
         <tr v-for="(item, index) in compras.data.value">
           <td>{{ item.fecha }}</td>
           <td>{{ item.proveedor.nombre }}</td>
-          <td>33</td>
-          <td>
-           ddd
-           
-          </td>
-          <td><v-chip :color="item.estatus === 'Procesado' ? 'primary':'red' ">{{ item.estatus }}</v-chip>  </td>
+          <td>{{ item.total }}</td>           
+          <td><v-chip :color="item.estatus === 'Procesado' ? 'primary':'red' ">algun status</v-chip>  </td>
+       
        <td>
         <v-col cols="auto">
                 <v-btn
@@ -45,6 +42,12 @@
   </v-card>
  
   {{compras}}
+
+
+------------
+
+ 
+    
  
 </template>
 <script setup>
@@ -62,6 +65,6 @@ const borrar = async (id) => {
     console.error("Error al enviar datos:", error);
   }
 };
-
+   
 
 </script>
