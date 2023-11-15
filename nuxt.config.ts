@@ -21,5 +21,5 @@ export default defineNuxtConfig({
       useVuetifyLabs: true , 
     }
   },
-  components: ['~/components/catalogos' ,'~/components']
+  components: ['~/components/catalogos' ,'~/components','~/components/compras']
 })

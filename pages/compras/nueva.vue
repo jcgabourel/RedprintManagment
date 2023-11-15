@@ -107,8 +107,7 @@
     </v-dialog>
   </div>
 
-{{ forma }}
- -------------
+ 
 {{ movimientosCompletos }}
 
  
@@ -165,6 +164,7 @@ const agregaProducto = () => {
 const submitForm2 = async () => {
   const router = useRouter();
 
+ 
   if (movimientos.length == 0) return;
   try {
     let ruta = `http://127.0.0.1:8000/api/compras`;

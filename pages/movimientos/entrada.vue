@@ -29,7 +29,7 @@
               />
 
               <v-autocomplete
-                :items="claves['productos'] "
+                :items="claves['producto'] "
                 item-title="nombre"
                 item-value="id"
                 label="Producto"
@@ -162,6 +162,9 @@
       </v-card>
     </v-dialog>
   </div>
+
+ 
+
 </template>
 <script setup>
 const productos = await useFetch(`http://127.0.0.1:8000/api/productos/`);
