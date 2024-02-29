@@ -1,4 +1,5 @@
 <template>
+  <div>
   <!-- <tabla :data="dato.data" :contract="contrato.data" modelo="detallecompras" />     -->
 
   <v-card title="Detalle">
@@ -20,7 +21,7 @@
             <td><v-btn
                   density="compact"
                   icon="mdi-pencil"  
-                  @click="dialog = true"                 
+                  @click="conciliar(item.id)"                 
                 /></td>
           <!-- <td>
             <v-row>
@@ -55,7 +56,7 @@
     <v-dialog v-model="dialog"   width="auto">
       <v-card>
         <v-card-text>
-           <detalle-entradas />
+           <detalle-entradas  :detalle_compra="productoConciliando"/>
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" block @click="dialog = false"
@@ -65,15 +66,22 @@
       </v-card>
     </v-dialog>
 
+ 
+----------------
+{{gabo}}
+------------------
 
 
 
+
+
+</div>
 </template>
 
 <script setup>
-const props = defineProps(["modelo"]);
+const props = defineProps(["modelo","resumenCompra"]);
 const dato = await useFetch(
-  `http://127.0.0.1:8000/api/detallecompras/${props.modelo}`
+  `http://127.0.0.1:8000/api/detallecompras/${props.modelo.id}`
 );
 const contrato = await useFetch(
   `http://127.0.0.1:8000/api/contracts/detallecompras`
@@ -86,6 +94,16 @@ const headers = Object.keys(contrato.data.value);
   });
 
 
+const gabo = ref(props.modelo.id)
+
+const productoConciliando = ref();
+
+  const conciliar = (id_producto)=>
+  {
+    //productoConciliando.value = dato.data.value[id_producto]
+    productoConciliando.value =dato.data.value.find(compra => compra.id === id_producto);
+   // dialog.value = true
+  }
 
   const dialog = ref(false)
 

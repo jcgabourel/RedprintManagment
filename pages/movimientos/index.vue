@@ -11,6 +11,7 @@
     <v-table>
       <thead>
         <tr>
+          <th class="text-left">Fecha</th>
           <th class="text-left">Producto</th>
           <th class="text-left">Locacion</th>
           <th class="text-left">Cantidad</th>
@@ -23,6 +24,7 @@
 
       <tbody>
         <tr v-for="(item, index) in movimientos.data.value">
+          <td>{{ item.fecha }}</td>
           <td>{{ item.producto.nombre }}</td>
           <td>{{ item.locacion.nombre }}</td>
           <td>{{ item.cantidad }}</td>
@@ -49,7 +51,7 @@
       </tbody>
     </v-table>
   </v-card>
-<pre>{{movimientos.data.value[0]}}</pre>
+ 
  
 </template>
 <script setup>

@@ -5,13 +5,9 @@
         <v-card>
           <v-toolbar density="compact">
             <v-toolbar-title> Compras </v-toolbar-title>
-
-           
           </v-toolbar>
 
-          
-
-          <v-card-text >
+          <v-card-text>
             <v-form @submit.prevent="submitForm2">
               <datepicker v-model="forma['fecha']"> </datepicker>
               <v-select
@@ -21,18 +17,18 @@
                 label="Proveedor"
                 v-model="forma['proveedor_id']"
                 variant="outlined"
-
-                @update:modelValue=" cambiaCategoria(
+                @update:modelValue="
+                  cambiaCategoria(
                     forma['proveedor_id'],
                     'proveedor_id',
                     'proveedores'
-                  ) "
+                  )
+                "
               />
 
               <v-table>
-                
                 <tbody>
-                  <tr v-for="(item, index) in movimientos"  >
+                  <tr v-for="(item, index) in movimientos">
                     <td>
                       <v-autocomplete
                         :items="claves['productos']"
@@ -43,7 +39,6 @@
                         hide-details="auto"
                         variant="plain"
                         placeholder="Producto"
-                        
                       />
                     </td>
                     <td>
@@ -107,20 +102,16 @@
     </v-dialog>
   </div>
 
- 
-{{ movimientosCompletos }}
-
- 
+  {{ forma }}
 </template>
 
 <script setup>
 import { VDatePicker } from "vuetify/labs/VDatePicker";
 
 const productos = await useFetch(`http://127.0.0.1:8000/api/productos/`);
- 
 
 const proveedores = await useFetch(`http://127.0.0.1:8000/api/proveedores/`);
- 
+
 const forma = reactive({});
 const movimientos = reactive([]);
 const modeloAlterno = ref();
@@ -130,41 +121,31 @@ const indiceAlterno = ref();
 
 const claves = reactive({});
 
- const log =ref("")
+const log = ref("");
 const movimientosCompletos = computed(() => {
- 
   return {
-          ...forma,
-          productos:{...movimientos}
-
-        }
-   
+    ...forma,
+    productos: { ...movimientos },
+  };
 });
 
 claves["productos"] = [
-  ...productos.data.value
+  ...productos.data.value,
   //,  { id: 0, nombre: "Nuevo Producto.." },
 ];
-
-
 
 claves["proveedores"] = [
   ...proveedores.data.value,
   { id: 0, nombre: "Nuevo Provedor.." },
 ];
 
-
-
 const agregaProducto = () => {
-  movimientos.push({ producto_id: null, cantidad: null ,precio:null});
+  movimientos.push({ producto_id: null, cantidad: null, precio: null });
 };
-
- 
 
 const submitForm2 = async () => {
   const router = useRouter();
 
- 
   if (movimientos.length == 0) return;
   try {
     let ruta = `http://127.0.0.1:8000/api/compras`;
@@ -175,7 +156,18 @@ const submitForm2 = async () => {
       body: movimientosCompletos.value,
     });
 
-    router.push({ path: `/compras` });
+
+    if(nuevo.status.value =="success") {
+      // La petición fue exitosa (estado HTTP 2xx)
+      router.push({ path: `/compras` });
+      //const responseData = await nuevo.json(); // Si la respuesta es JSON
+    } else {
+      // const errorMessage = await nuevo.text(); // Obtener el mensaje de error como texto
+      console.error("error", nuevo.status);
+     
+    }
+
+    //
   } catch (error) {
     console.error("Error al enviar datos:", error);
   }
@@ -207,8 +199,9 @@ async function crearSubmitedHandler(cual) {
     ...clavex.data.value,
     { id: 0, nombre: `Nuevo ${indiceAlterno.value.slice(0, -3)}..` },
   ];
-  log.value =`indiceAlterno.value = ${indiceAlterno.value } , ${indiceAlterno.value.slice(0, -3)}`
- 
+  log.value = `indiceAlterno.value = ${
+    indiceAlterno.value
+  } , ${indiceAlterno.value.slice(0, -3)}`;
 
   forma[indiceAlterno.value] = cual;
 }

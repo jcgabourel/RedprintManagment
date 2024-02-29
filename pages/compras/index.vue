@@ -59,7 +59,7 @@
     <v-dialog v-model="dialog"   width="auto">
       <v-card>
         <v-card-text>
-          <detallecompras :modelo="compraId"/>
+          <detallecompras :modelo="compraResumen"/>
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" block @click="dialog = false"
@@ -105,7 +105,11 @@ catch (error) {
 
 
 const compraId = ref (0)
+const compraResumen = ref (0)
+
+
 const ver = (id)=>{
+  compraResumen.value = compras.data.value.find(compra => compra.id === id);
   compraId.value =  id
   dialog.value = true
 
