@@ -1,7 +1,7 @@
 <template>
   <div>
   <!-- <tabla :data="dato.data" :contract="contrato.data" modelo="detallecompras" />     -->
-
+ 
   <v-card title="Detalle">
     <v-table>
       <thead>
@@ -67,13 +67,12 @@
     </v-dialog>
 
  
-----------------
-{{gabo}}
-------------------
+ 
+
+     
 
 
-
-
+ 
 
 </div>
 </template>
@@ -101,8 +100,16 @@ const productoConciliando = ref();
   const conciliar = (id_producto)=>
   {
     //productoConciliando.value = dato.data.value[id_producto]
-    productoConciliando.value =dato.data.value.find(compra => compra.id === id_producto);
-   // dialog.value = true
+    productoConciliando.value = [ {"id":props.modelo.id,
+                                  "fecha":props.modelo.fecha,
+                                  "estatus":props.modelo.estatus,
+                                  "total":props.modelo.total,
+                                  "proveedor":props.modelo.proveedor,
+                                  "registro": dato.data.value.find(compra => compra.id === id_producto) 
+                                  }
+                                 
+  ];
+     dialog.value = true
   }
 
   const dialog = ref(false)
