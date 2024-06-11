@@ -100,7 +100,7 @@ const productoConciliando = ref();
   const conciliar = (id_producto)=>
   {
     //productoConciliando.value = dato.data.value[id_producto]
-    productoConciliando.value = [ {"id":props.modelo.id,
+    productoConciliando.value =   {"id":props.modelo.id,
                                   "fecha":props.modelo.fecha,
                                   "estatus":props.modelo.estatus,
                                   "total":props.modelo.total,
@@ -108,7 +108,7 @@ const productoConciliando = ref();
                                   "registro": dato.data.value.find(compra => compra.id === id_producto) 
                                   }
                                  
-  ];
+  ;
      dialog.value = true
   }
 

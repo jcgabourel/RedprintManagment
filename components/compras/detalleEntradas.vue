@@ -6,18 +6,18 @@
         <v-col cols="6">
           <v-row>
             <v-col cols="12">
-              <strong>Fecha:</strong> {{ detalle_compra[0].fecha }}
+              <strong>Fecha:</strong> {{ detalle_compra.fecha }}
             </v-col>
             <v-col cols="12">
               <strong>Proveedor:</strong>
-              {{ detalle_compra[0].proveedor.nombre }}
+              {{ detalle_compra.proveedor.nombre }}
             </v-col>
             <v-col cols="12">
               <strong>Producto:</strong>
-              {{ detalle_compra[0].registro.producto.nombre }}
+              {{ detalle_compra.registro.producto.nombre }}
             </v-col>
             <v-col cols="12">
-              <strong>Precio:</strong> {{ detalle_compra[0].registro.precio }}
+              <strong>Precio:</strong> {{ detalle_compra.registro.precio }}
             </v-col>
           </v-row>
         </v-col>
@@ -27,11 +27,11 @@
           <v-row>
             <v-col cols="12">
               <strong>Cantidad:</strong>
-              {{ detalle_compra[0].registro.cantidad }}
+              {{ detalle_compra.registro.cantidad }}
             </v-col>
             <v-col cols="12">
               <strong>Sin ingresar:</strong>
-              {{ detalle_compra[0].registro.cantidad }}
+              {{ detalle_compra.registro.cantidad }}
             </v-col>
             <v-col cols="12">
               <strong>Ingresados:</strong>
@@ -67,13 +67,13 @@
           <td>
             <v-col cols="auto">
               <v-text-field
-                type="number"
+              type="number"
                 :max="item.cantidad"
                 min="0"
                 step="1"
                 clearable
                 variant="outlined"
-                @input="validateInteger($event)"
+                @input="validateInteger(index,item,$event)"
                 @paste="handlePaste($event)"
                 v-model="cantidadArray[index]"
               />
@@ -83,34 +83,49 @@
       </tbody>
     </v-table>
 
-    {{ cantidadArray }}
+   
+-----------------------<br />
+totalCantidad :   {{ totalCantidad }} <br />
+---------------------<br />
+props.detalle_compra.registro.cantidad : {{ props.detalle_compra.registro.cantidad }}<br />
+---------------------<br />
+totalCantidad > props.detalle_compra.registro.cantidad : {{totalCantidad > props.detalle_compra.registro.cantidad}}<br />
+---------------------
+prueba : {{ prueba }}
   </div>
 </template>
 
 <script setup>
+const prueba = ref(0);
 const props = defineProps(["detalle_compra"]);
 const movimientos = await useFetch(`http://127.0.0.1:8000/api/movimientos`);
-const validateInteger = (event) => {
-  const inputValue = parseInt(event.target.value) || 0;
-  const maxValue = parseInt(event.target.max) || Infinity;
-  const minValue = parseInt(event.target.min) || -Infinity;
-  // Verificar si el valor excede el límite máximo
-  if (inputValue > maxValue) {
-      event.target.value = maxValue;
-      return;
-    }
+const cantidadArray = reactive([]);
 
-    // Verificar si el valor es menor que el mínimo
-    if (inputValue < minValue) {
-      event.target.value = minValue;
-      return;
-    }
+const validateInteger = (index,item,event) => {
+
+console.log(event.target.value)
+
+  let inputValue = cantidadArray[index] ;
+
+  let inputValue2 = event.target.value;
     
-  // Expresión regular para verificar si el valor es un número entero
-  if (!/^\d+$/.test(inputValue)) {
-    // Si no es un número entero, ajusta el valor del campo
-    event.target.value = Math.floor(inputValue);
-  }
+      inputValue = inputValue2.replace(/[^\d]/g, '');
+     
+      if (parseInt(inputValue) > item.cantidad  ) {
+        inputValue = item.cantidad;
+        cantidadArray[index] = inputValue;
+      }
+ 
+    
+      if (    parseInt(totalCantidad.value) > parseInt(props.detalle_compra.registro.cantidad)) {
+        inputValue =  inputValue -   ( totalCantidad.value  - props.detalle_compra.registro.cantidad   )
+        cantidadArray[index] = inputValue;
+        } 
+     
+  
+      
+ 
+  
 };
 
 const handlePaste = (event) => {
@@ -124,7 +139,7 @@ const handlePaste = (event) => {
   document.execCommand("insertText", false, integerText);
 };
 
-const cantidadArray = reactive([]);
+
 
 const totalCantidad = computed(() => {
   const filteredArray = cantidadArray.filter((val) => val !== ""); // Filtrar cadenas vacías
